@@ -3,49 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nagendra - Portfolio</title>
+  <title>Tap The Dot - Pro Edition</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      background: #1B263B;
+      color: white;
       font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
     }
-    .project {
-      border: 1px solid #ddd;
-      padding: 15px;
+    #gameArea {
+      width: 300px;
+      height: 400px;
+      background: #0D1B2A;
+      border: 3px solid #2D6CDF;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    #dot {
+      width: 40px;
+      height: 40px;
+      background: #2D6CDF;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+    #dot:active { transform: scale(0.9); }
+    .stats {
+      display: flex;
+      gap: 20px;
       margin: 15px 0;
-      border-radius: 8px;
+      font-size: 18px;
     }
-    h1, h2, h3 { color: #333; }
-    a { color: #2D6CDF; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    #gameOver {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    button {
+      background: #2D6CDF;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover { background: #1e4fa3; }
   </style>
 </head>
 <body>
-  <h1>Hi, I'm Nagendra 👋</h1>
-  <p>Aspiring developer learning to build with code.</p>
-
-  <h2>Projects</h2>
-
-  <div class="project">
-    <h3>Car Racing Game</h3>
-    <p>Text-based game using Python. Dodge obstacles to score points.</p>
-    <a href="https://github.com/middenagendra269-boop/car-racing-game">View on GitHub →</a>
+  <h1>Tap The Dot</h1>
+  <div class="stats">
+    <div>Score: <span id="score">0</span></div>
+    <div>High: <span id="highScore">0</span></div>
+    <div>Level: <span id="level">1</span></div>
+  </div>
+  
+  <div id="gameArea">
+    <div id="dot"></div>
+    <div id="gameOver">
+      <h2>Game Over!</h2>
+      <p>Final Score: <span id="finalScore">0</span></p>
+      <p>High Score: <span id="finalHighScore">0</span></p>
+      <button onclick="restartGame()">Play Again</button>
+    </div>
   </div>
 
-  <div class="project">
-    <h3>Tap The Dot - 2D Browser Game</h3>
-    <p>Interactive game built with vanilla JavaScript. Score tracking + touch controls. No frameworks.</p>
-    <a href="Game.html" target="_blank">Play Game →</a>
-  </div>
+  <script>
+    const dot = document.getElementById('dot');
+    const gameArea = document.getElementById('gameArea');
+    const scoreEl = document.getElementById('score');
+    const highScoreEl = document.getElementById('highScore');
+    const levelEl = document.getElementById('level');
+    const gameOverScreen = document.getElementById('gameOver');
+    const finalScoreEl = document.getElementById('finalScore');
+    const finalHighScoreEl = document.getElementById('finalHighScore');
 
-  <h2>Skills</h2>
-  <p>Python, Git, GitHub, Problem Solving, JavaScript</p>
+    let score = 0;
+    let level = 1;
+    let dotSize = 40;
+    let gameActive = true;
+    let highScore = localStorage.getItem('dotHighScore') || 0;
+    highScoreEl.textContent = highScore;
 
-  <h2>Contact</h2>
-  <p>GitHub: <a href="https://github.com/middenagendra269-boop">@middenagendra269-boop</a></p>
+    // Sound effects using Web Audio API - no files needed
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playClick() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = 800;
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function playGameOver() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = 200;
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+    }
+
+    function moveDot() {
+      if (!gameActive) return;
+      const maxX = gameArea.clientWidth - dotSize;
+      const maxY = gameArea.clientHeight - dotSize;
+      dot.style.left = Math.random() * maxX + 'px';
+      dot.style.top = Math.random() * maxY + 'px';
+      dot.style.width = dotSize + 'px';
+      dot.style.height = dotSize + 'px';
+    }
+
+    function updateLevel() {
+      level = Math.floor(score / 5) + 1;
+      levelEl.textContent = level;
+      dotSize = Math.max(20, 40 - level * 2); // Dot gets smaller
+    }
+
+    function endGame() {
+      gameActive = false;
+      playGameOver();
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('dotHighScore', highScore);
+        highScoreEl.textContent = highScore;
+      }
+      finalScoreEl.textContent = score;
+      finalHighScoreEl.textContent = highScore;
+      gameOverScreen.style.display = 'flex';
+    }
+
+    function restartGame() {
+      score = 0;
+      level = 1;
+      dotSize = 40;
+      gameActive = true;
+      scoreEl.textContent = score;
+      levelEl.textContent = level;
+      gameOverScreen.style.display = 'none';
+      moveDot();
+    }
+
+    dot.addEventListener('click', () => {
+      if (!gameActive) return;
+      playClick();
+      score++;
+      scoreEl.textContent = score;
+      updateLevel();
+      moveDot();
+      
+      // 5% chance of game over per click - makes it tense
+      if (Math.random() < 0.05 && score > 3) {
+        endGame();
+      }
+    });
+
+    // Start game
+    moveDot();
+  </script>
 </body>
 </html>
