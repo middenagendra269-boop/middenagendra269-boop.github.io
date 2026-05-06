@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tap Game</title>
+<style>
+body { margin:0; background:#0D1B2A; font-family:Arial; touch-action:manipulation; }
+#game { width:100vw; height:75vh; position:relative; background:#1B263B; overflow:hidden; }
+#dot { width:60px; height:60px; background:#2D6CDF; border-radius:50%; 
+       position:absolute; top:100px; left:100px; cursor:pointer; }
+#score { color:white; font-size:24px; text-align:center; padding:15px; }
+</style>
+</head>
+<body>
+<div id="score">Score: 0</div>
+<div id="game">
+  <div id="dot"></div>
+</div>
+
+<script>
+let score = 0;
+const dot = document.getElementById('dot');
+const scoreEl = document.getElementById('score');
+
+dot.onclick = function(e) {
+  e.stopPropagation();
+  score++;
+  scoreEl.textContent = 'Score: ' + score;
+  dot.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+  dot.style.top = Math.random() * (window.innerHeight * 0.75 - 60) + 'px';
+};
+</script>
+</body>
+</html>
