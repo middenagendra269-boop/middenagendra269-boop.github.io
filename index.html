@@ -3,32 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nagendra Middenagendra | Portfolio</title>
+  <title>Nagendra Middenagendra - Portfolio</title>
   <style>
-    body {background: #0D1B2A; color: white; font-family: Arial; margin: 0; padding: 20px; text-align: center;}
-    .container {max-width: 800px; margin: 0 auto;}
-    h1 {color: #2D6CDF;}
-    .projects {display: grid; gap: 20px; margin-top: 30px;}
-    .card {background: #1B263B; border: 2px solid #2D6CDF; border-radius: 10px; padding: 20px;}
-    .btn {background: #2D6CDF; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px;}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0D1B2A;
+      color: white;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1 {
+      color: #2D6CDF;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    .projects {
+      display: grid;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .card {
+      background: #1B263B;
+      border: 2px solid #2D6CDF;
+      border-radius: 10px;
+      padding: 25px;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      color: #2D6CDF;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+    .card p {
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      background: #2D6CDF;
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: #1e4fa3;
+    }
+    .footer {
+      margin-top: 50px;
+      color: #666;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Nagendra Middenagendra</h1>
-    <p>Computer Science Student | Web Developer</p>
+    <p class="subtitle">Computer Science Student | Web Developer</p>
+    
     <div class="projects">
       <div class="card">
         <h2>Car Racing Game</h2>
         <p>Python terminal game with OOP concepts</p>
         <a href="https://github.com/middenagendra269-boop" class="btn">View Code →</a>
       </div>
-        <div class="card">
-    <h2>Parking Master - 2D Physics Game</h2>
-    <p>Car parking simulator with steering physics, collision detection, and Canvas API. Built with vanilla JavaScript.</p>
-    <a href="ParkingMaster.html" class="btn">Play Game →</a>
-  </div>
+
+      <div class="card">
+        <h2>Tap The Dot - 2D Browser Game</h2>
+        <p>JavaScript game with high scores, levels, and sound effects</p>
+        <a href="Game.html" class="btn">Play Game →</a>
       </div>
+
+      <div class="card">
+        <h2>Parking Master - 2D Physics Game</h2>
+        <p>Car parking simulator with steering physics, collision detection, and Canvas API. Built with vanilla JavaScript.</p>
+        <a href="ParkingMaster.html" class="btn">Play Game →</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>© 2026 Nagendra Middenagendra | Built with HTML/CSS/JS</p>
     </div>
   </div>
 </body>
