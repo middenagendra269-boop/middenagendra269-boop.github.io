@@ -3,194 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tap The Dot - Pro Edition</title>
+  <title>Nagendra Middenagendra | Portfolio</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #1B263B;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-    #gameArea {
-      width: 300px;
-      height: 400px;
-      background: #0D1B2A;
-      border: 3px solid #2D6CDF;
-      border-radius: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-    #dot {
-      width: 40px;
-      height: 40px;
-      background: #2D6CDF;
-      border-radius: 50%;
-      position: absolute;
-      cursor: pointer;
-      transition: all 0.1s;
-    }
-    #dot:active { transform: scale(0.9); }
-    .stats {
-  display: flex;
-  gap: 20px;
-  margin: 15px 0;
-  font-size: 18px;
-  justify-content: center;
-  width: 300px;
-}
-    }
-    #gameOver {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    button {
-      background: #2D6CDF;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-    button:hover { background: #1e4fa3; }
+    body {background: #0D1B2A; color: white; font-family: Arial; margin: 0; padding: 20px; text-align: center;}
+    .container {max-width: 800px; margin: 0 auto;}
+    h1 {color: #2D6CDF;}
+    .projects {display: grid; gap: 20px; margin-top: 30px;}
+    .card {background: #1B263B; border: 2px solid #2D6CDF; border-radius: 10px; padding: 20px;}
+    .btn {background: #2D6CDF; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px;}
   </style>
 </head>
 <body>
-Tap The Dot</h1>
-<a href="https://middenagendra269-boop.github.io" style="color: #2D6CDF; margin-bottom: 10px; display: block;">← Back to Portfolio</a>
-<div class="stats">
-  <div class="stats">
-    <div>Score: <span id="score">0</span></div>
-    <div>High: <span id="highScore">0</span></div>
-    <div>Level: <span id="level">1</span></div>
-  </div>
-  
-  <div id="gameArea">
-    <div id="dot"></div>
-    <div id="gameOver">
-      <h2>Game Over!</h2>
-      <p>Final Score: <span id="finalScore">0</span></p>
-      <p>High Score: <span id="finalHighScore">0</span></p>
-      <button onclick="restartGame()">Play Again</button>
+  <div class="container">
+    <h1>Nagendra Middenagendra</h1>
+    <p>Computer Science Student | Web Developer</p>
+    <div class="projects">
+      <div class="card">
+        <h2>Car Racing Game</h2>
+        <p>Python terminal game with OOP concepts</p>
+        <a href="https://github.com/middenagendra269-boop" class="btn">View Code →</a>
+      </div>
+      <div class="card">
+        <h2>Tap The Dot - 2D Browser Game</h2>
+        <p>JavaScript game with high scores, levels, and sound effects</p>
+        <a href="Game.html" class="btn">Play Game →</a>
+      </div>
     </div>
   </div>
-
-  <script>
-    const dot = document.getElementById('dot');
-    const gameArea = document.getElementById('gameArea');
-    const scoreEl = document.getElementById('score');
-    const highScoreEl = document.getElementById('highScore');
-    const levelEl = document.getElementById('level');
-    const gameOverScreen = document.getElementById('gameOver');
-    const finalScoreEl = document.getElementById('finalScore');
-    const finalHighScoreEl = document.getElementById('finalHighScore');
-
-    let score = 0;
-    let level = 1;
-    let dotSize = 40;
-    let gameActive = true;
-    let highScore = localStorage.getItem('dotHighScore') || 0;
-    highScoreEl.textContent = highScore;
-
-    // Sound effects using Web Audio API - no files needed
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    function playClick() {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.value = 800;
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.1);
-    }
-
-    function playGameOver() {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.value = 200;
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.5);
-    }
-
-    function moveDot() {
-      if (!gameActive) return;
-      const maxX = gameArea.clientWidth - dotSize;
-      const maxY = gameArea.clientHeight - dotSize;
-      dot.style.left = Math.random() * maxX + 'px';
-      dot.style.top = Math.random() * maxY + 'px';
-      dot.style.width = dotSize + 'px';
-      dot.style.height = dotSize + 'px';
-    }
-
-    function updateLevel() {
-      level = Math.floor(score / 5) + 1;
-      levelEl.textContent = level;
-      dotSize = Math.max(20, 40 - level * 2); // Dot gets smaller
-    }
-
-    function endGame() {
-      gameActive = false;
-      playGameOver();
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('dotHighScore', highScore);
-        highScoreEl.textContent = highScore;
-      }
-      finalScoreEl.textContent = score;
-      finalHighScoreEl.textContent = highScore;
-      gameOverScreen.style.display = 'flex';
-    }
-
-    function restartGame() {
-      score = 0;
-      level = 1;
-      dotSize = 40;
-      gameActive = true;
-      scoreEl.textContent = score;
-      levelEl.textContent = level;
-      gameOverScreen.style.display = 'none';
-      moveDot();
-    }
-
-    dot.addEventListener('click', () => {
-      if (!gameActive) return;
-      playClick();
-      score++;
-      scoreEl.textContent = score;
-      updateLevel();
-      moveDot();
-      
-      // 5% chance of game over per click - makes it tense
-      if (Math.random() < 0.05 && score > 3) {
-        endGame();
-      }
-    });
-
-    // Start game
-    moveDot();
-  </script>
 </body>
 </html>
